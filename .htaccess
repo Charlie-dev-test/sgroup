@@ -1,0 +1,25 @@
+#<IfModule mod_rewrite.c>
+#        RewriteEngine On
+#        RewriteBase /
+#
+#        # Removes index.php from ExpressionEngine URLs
+#        RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+#        RewriteCond %{REQUEST_URI} !/system/.* [NC]
+#        RewriteRule (.*?)index\.php/*(.*) /$1$2 [R=301,NE,L]
+#
+#        # Directs all EE web requests through the site index file
+#        RewriteCond %{REQUEST_FILENAME} !-f
+#        RewriteCond %{REQUEST_FILENAME} !-d
+#        RewriteRule ^(.*)$ /index.php/$1 [L]
+#</IfModule>
+
+AddDefaultCharset UTF-8
+Options +FollowSymLinks
+Options -Indexes
+DirectoryIndex index.php
+RewriteEngine on
+RewriteCond $1 !^(index\.php|images|css|robots\.txt|public)
+RewriteCond %{REQUEST_URI} !\.(css³js³jpg³gif³png)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?/$1 [L,QSA]
