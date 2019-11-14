@@ -1,5 +1,4 @@
 <div class="result">
-
 </div>
 
 <?php echo form_open('form'); ?>
