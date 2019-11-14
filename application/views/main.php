@@ -1,11 +1,10 @@
-<?php echo validation_errors(); ?>
+<div class="result">
+
+</div>
 
 <?php echo form_open('form'); ?>
     <label for="link">Ваша ссылка: </label>
-    <input id="link" name="username" type="text">
+    <input id="link" name="link" type="url">
     <br/>
-    <input type="submit" value="Сократить">
+    <input type="submit" value="Сократить" id="submit">
 </form>
-
-<!--<input type="url">-->
-<!--<button class="button">Сократить</button>-->

@@ -2,10 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Created by PhpStorm.
- * User: Pavel
- * Date: 13.11.2019
- * Time: 16:00
+ *
  */
 class Main extends CI_Controller {
 
@@ -27,36 +24,52 @@ class Main extends CI_Controller {
             if(isset($_POST['link'])){
 
                 if ($this->form_validation->run() == FALSE) {
-                    echo 'Enter valid';
+                    echo 'Введите не пустую ссылку';
                 } else {
                     $url = htmlspecialchars($_POST['link']);
                     $checked = $this->link_model->check_url($url);
                     if($checked) {
-
-                        $this->link_model->reduce_url($url);
+                        $set_url = $this->link_model->reduce_url($url);
+                        if($set_url) {
+                            echo base_url() . '?=' . $set_url;
+                        }
 
                     } else {
-                        echo 'Enter valid';
+                        echo 'Введите валидный Url';
                     }
-
-
                 }
 
             }else{
-                echo 'Nope!';
+                echo 'Произошла ошибка';
             }
         }else{
-            $data['title'] = "Главная страница";
-            $this->load->helper('url');
 
-            $this->load->view('templates/header', $data);
-            $this->load->view('main', $data);
-            $this->load->view('templates/footer');
+            $request_uri = ltrim($_SERVER["REQUEST_URI"], '/?=');
+            if($request_uri == ''){
+                $data['title'] = "Главная страница";
+                $this->load->helper('url');
+
+                $this->load->view('templates/header', $data);
+                $this->load->view('main', $data);
+                $this->load->view('templates/footer');
+            } else {
+                $find = $this->link_model->find_url($request_uri);
+                if($find){
+                    header('Location:' .$find);
+                } else {
+                    echo '<h4>Такой ссылки не существует!</h4><br>';
+                    $data['title'] = "Главная страница";
+                    $this->load->helper('url');
+
+                    $this->load->view('templates/header', $data);
+                    $this->load->view('main', $data);
+                    $this->load->view('templates/footer');
+                }
+
+            }
+
         }
 
-
     }
-
-
 
 }
