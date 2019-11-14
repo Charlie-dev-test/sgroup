@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    // запускаем валидацию формы
     $('form').validate({
         rules: {
             link: {
@@ -13,6 +14,7 @@ $(document).ready(function(){
             }
         },
         submitHandler: function(){
+            // в случае успешной валидации запускаем отправку данных
             sendLink();
         }
     });
@@ -32,6 +34,7 @@ $(document).ready(function(){
         });
     }
 
+    //функция вывода на экран полученного результата отправки данных
     function setResult(res){
         $('.result').html('<p>'+res+'</p>');
     }

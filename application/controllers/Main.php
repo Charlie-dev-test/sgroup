@@ -2,24 +2,34 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
+ * Класс Main
+ *
+ * Этот класс позволяет вам получить по ajax-запросу ссылку, провалидировать ее, положить в базу и вывести укороченную ссылку
+ * Также здесь происходит перенаправление пользователя, если он перешел по ранее сгенерированной нами ссылке.
  *
  */
 class Main extends CI_Controller {
 
+    /**
+     * Main constructor.
+     * Подключаем модель
+     */
     public function __construct() {
         parent::__construct();
         $this->load->model('link_model');
     }
 
 
+    /**
+     * Функция обработки приходящих данных на главную страницу, их отображения, обработки ajax-запроса с ссылкой,
+     * перенаправление пользователя на страницу по ссылке, сохраненной в базе.
+     */
     public function index() {
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
-
-
         $this->form_validation->set_rules('link', 'Url', 'required');
 
-
+        //если ajax-запрос, то принимаем и проверяем строку, если все хорошо, ложим в базу и показываем пользователю укороченныую ссылку
         if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
             if(isset($_POST['link'])){
 
@@ -43,8 +53,8 @@ class Main extends CI_Controller {
                 echo 'Произошла ошибка';
             }
         }else{
-
             $request_uri = ltrim($_SERVER["REQUEST_URI"], '/?=');
+            //если запрос пришел без параметров, отображаем страницу
             if($request_uri == ''){
                 $data['title'] = "Главная страница";
                 $this->load->helper('url');
@@ -53,6 +63,7 @@ class Main extends CI_Controller {
                 $this->load->view('main', $data);
                 $this->load->view('templates/footer');
             } else {
+                // если запрос пришел с параметром, проверяем, есть ли такая ссылка в базе, если есть, перенаправляем.
                 $find = $this->link_model->find_url($request_uri);
                 if($find){
                     header('Location:' .$find);

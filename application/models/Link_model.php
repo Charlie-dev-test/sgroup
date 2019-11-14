@@ -1,15 +1,24 @@
 <?php
 
 /**
+ * Модель для обработки url
  *
- *
+ * Эта модель позволяет проверять приходящее значение ссылки на валидность, укорачивать ссылки и заносить их в базу, а также получать из базы ссылки.
  */
 class Link_model extends CI_Model {
 
+    /**
+     * Link_model constructor. Подключение к базе
+     */
     public function __construct() {
         $this->load->database();
     }
 
+    /**
+     * Функция проверки переданной ссылки на валидность
+     * @param $url
+     * @return bool
+     */
     public function check_url($url) {
         if(!preg_match("/^(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4})(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))$/u", $url)){
             return false;
@@ -18,6 +27,12 @@ class Link_model extends CI_Model {
         }
     }
 
+
+    /**
+     * Функция минимизации ссылки и занесения ее в базу.
+     * @param $url
+     * @return string
+     */
     public function reduce_url($url){
         $old_url = $this->db->get_where('urls', array('url' => $url));
         $old_url->row_array();
@@ -45,6 +60,12 @@ class Link_model extends CI_Model {
         }
     }
 
+
+    /**
+     * Функция извлечения из базы сохраненной ссылки
+     * @param $url
+     * @return mixed
+     */
     public function find_url($url){
         $old = $this->db->get_where('urls', array('short_url' => $url));
         $old->row_array();
